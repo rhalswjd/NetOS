@@ -1,5 +1,5 @@
-/** Fill in these two values when the owner shares their GitHub URL and email. */
+/** Public contact details only. Never put a private forwarding mailbox here. */
 export const siteContact: { githubUrl: string; email: string } = {
-  githubUrl: '',
-  email: '',
+  githubUrl: 'https://github.com/rhalswjd/NetOS.git',
+  email: 'netos-contact.lushly064@aleeas.com',
 };

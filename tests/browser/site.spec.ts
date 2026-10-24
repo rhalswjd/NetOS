@@ -1,6 +1,50 @@
 import { test, expect } from '@playwright/test';
 import { networkLayers, osAreas, documentTypes } from '../../src/lib/taxonomy';
+import { siteContact } from '../../src/config/contact';
 const go = (path: string) => path.replace(/^\//, '');
+
+test('public footer contacts work safely on custom and reader pages', async ({
+  page,
+  context,
+}) => {
+  // Keep CI independent of GitHub and never open or send mail from a test.
+  await context.route(siteContact.githubUrl, (route) =>
+    route.fulfill({ contentType: 'text/html', body: '<h1>Repository</h1>' }),
+  );
+  for (const path of ['./', go('/network/topics/dhcp/')]) {
+    await page.goto(path);
+    const github = page.locator('.footer-contacts a[data-contact="github"]');
+    const email = page.locator('.footer-contacts a[data-contact="email"]');
+    await expect(github).toHaveAttribute('href', siteContact.githubUrl);
+    await expect(github).toHaveAttribute('target', '_blank');
+    await expect(github).toHaveAttribute('rel', 'noopener noreferrer');
+    await expect(email).toHaveAttribute('href', `mailto:${siteContact.email}`);
+    const handoff = page.evaluate(
+      () =>
+        new Promise<string>((resolve) => {
+          document
+            .querySelector('.footer-contacts a[data-contact="email"]')!
+            .addEventListener(
+              'click',
+              (event) => {
+                event.preventDefault();
+                resolve((event.currentTarget as HTMLAnchorElement).href);
+              },
+              { once: true },
+            );
+        }),
+    );
+    await email.click();
+    expect(await handoff).toBe(`mailto:${siteContact.email}`);
+    const popupOpened = page.waitForEvent('popup');
+    await github.click();
+    const popup = await popupOpened;
+    await expect(popup).toHaveURL(siteContact.githubUrl);
+    await expect(popup.locator('h1')).toHaveText('Repository');
+    expect(await popup.evaluate(() => window.opener)).toBeNull();
+    await popup.close();
+  }
+});
 
 test('home floating cards and all four archive entries navigate', async ({
   page,
@@ -275,6 +319,8 @@ test('the current table-of-contents label grows and resets as sections change', 
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto(go('/network/topics/dhcp/'));
   const toc = page.locator(isMobile ? 'mobile-starlight-toc' : 'starlight-toc');
+  // Measure the visible dropdown; hidden details can suspend CSS transitions.
+  if (isMobile) await toc.locator('summary').click();
   const first = toc.locator('nav a').filter({ hasText: '왜 필요한가?' });
   const second = toc.locator('nav a').filter({ hasText: '동작 과정' });
   const scrollToSection = async (name: string) => {

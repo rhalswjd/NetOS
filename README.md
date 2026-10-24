@@ -6,7 +6,7 @@
 
 [사이트 미리보기](#사이트-미리보기) · [로컬 실행](#로컬-실행) · [글 작성 가이드](docs/templates/작성양식/README.md) · [개발 문서](docs/README.md)
 
-> **배포 상태: 아직 미배포입니다.** GitHub Pages 배포 설정은 준비되어 있으며, 아래 미리보기는 로컬 프로덕션 빌드를 직접 캡처한 화면입니다.
+> **[GitHub Pages에서 사이트 보기](https://rhalswjd.github.io/NetOS/)** · 아래 미리보기는 로컬 프로덕션 빌드를 직접 캡처한 화면입니다.
 
 ## 사이트 미리보기
 
@@ -150,7 +150,7 @@ npm run qa
 
 ## GitHub Pages 배포
 
-배포 워크플로는 설정되어 있지만 **실제 원격 배포는 아직 수행하지 않았습니다.**
+사이트는 [GitHub Pages](https://rhalswjd.github.io/NetOS/)에서 운영합니다.
 
 1. 프로젝트를 GitHub 저장소에 올립니다. 배포 기준 브랜치는 `main`입니다.
 2. 저장소 **Settings → Pages → Build and deployment → Source**를 **GitHub Actions**로 선택합니다.
@@ -164,4 +164,12 @@ npm run qa
 
 [문서 모음](docs/README.md) · [작성 양식](docs/templates/README.md) · [테스트 안내](docs/TESTING.md) · [검증 기록](docs/QA.md)
 
-푸터의 GitHub·Email은 [`src/config/contact.ts`](src/config/contact.ts)에서 설정합니다. 현재 빈 값은 링크 없는 라벨로 표시됩니다.
+푸터의 GitHub·Email은 [`src/config/contact.ts`](src/config/contact.ts)에서만 관리합니다. Email에는 공개를 허용한 SimpleLogin 별칭만 사용하며, 실제 전달 대상 메일함 주소는 코드·문서·환경변수에 기록하지 않습니다. 빈 값은 링크 없는 라벨로 표시됩니다.
+
+### 연락처 개인정보 관리
+
+- 공개 별칭도 스팸을 받을 수 있습니다. SimpleLogin 대시보드에서 해당 별칭의 **Contacts**를 열어 특정 발신자를 차단하거나, 별칭 토글을 꺼서 전체 수신을 중단합니다. [공식 관리 안내](https://simplelogin.io/docs/getting-started/block-sender/)
+- 전달받은 메일에는 **답장**을 사용하고 수신자가 SimpleLogin 역별칭인지 확인합니다. 상대방의 원래 주소로 직접 새 메일을 보내면 실제 메일함 주소가 노출될 수 있습니다. [역별칭 안내](https://simplelogin.io/docs/getting-started/reverse-alias/)
+- 별도 테스트 계정으로 별칭에 메일을 보낸 뒤 답장받아, 수신된 원문의 `From`, `Reply-To`, 전체 헤더·서명·인용문에 실제 주소나 본명이 없는지 확인합니다. Gmail의 발신자 표시 이름과 자동 서명도 점검합니다. 실제 송수신과 계정 설정은 사이트 테스트만으로 확인할 수 없습니다.
+- 커밋 이메일은 NetOS 저장소의 로컬 Git 설정에서 GitHub가 제공한 noreply 주소를 사용합니다. GitHub의 **Settings → Emails**에서 비공개 이메일 및 개인 이메일이 포함된 push 차단 설정을 직접 확인하세요. 계정 설정은 다른 저장소에도 영향을 줍니다.
+- Git 설정을 바꿔도 과거 커밋의 이메일은 바뀌지 않습니다. 이력 정리는 별도 승인 후 백업과 협업자 조율을 거쳐 진행해야 하며, 이미 복제된 저장소와 캐시의 완전 삭제는 보장할 수 없습니다.

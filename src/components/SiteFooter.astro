@@ -35,6 +35,8 @@ const contacts = [
             class="footer-contact"
             data-contact={contact.id}
             href={contact.href}
+            target={contact.id === 'github' ? '_blank' : undefined}
+            rel={contact.id === 'github' ? 'noopener noreferrer' : undefined}
           >
             <Icon name={contact.icon} size={16} />
             {contact.label}
