@@ -1,6 +1,6 @@
 # 테스트 안내
 
-[프로젝트 소개](../README.md) · [검증 기록](../docs/QA.md)
+[프로젝트 소개](../README.md) · [검증 기록](QA.md)
 
 ## 테스트 분류
 
@@ -74,3 +74,16 @@ npm run capture:reader -- http://127.0.0.1:4321/
 - `capture:reader`: 문서 하단·현재 목차·필터·푸터를 데스크톱·모바일에서 확인합니다. 출력은 `/tmp/netos-refinements/`입니다.
 
 캡처 도구는 수동 검토용이며 `qa`나 배포 워크플로에서 자동 실행하지 않습니다. `capture:reader`의 개발 도구 모음 검사에는 개발 서버를 사용하세요.
+
+## README 미리보기 갱신
+
+프로덕션 빌드를 미리보기 서버로 연 뒤 실제 Local URL을 전달합니다.
+
+```sh
+npm run build
+npm run preview
+# 별도 터미널에서, 위 서버가 출력한 주소 사용
+npm run capture:readme -- http://127.0.0.1:4321/
+```
+
+Home·Network·OS 화면을 데스크톱의 밝은 테마로 캡처해 `docs/assets/previews/`에 저장합니다. README는 이 로컬 이미지를 사용하며 배포 URL이나 배포 성공 상태를 나타내지 않습니다. 기존 디자인 참고 이미지는 `docs/assets/references/`에 보관합니다.

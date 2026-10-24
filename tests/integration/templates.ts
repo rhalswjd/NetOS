@@ -40,11 +40,11 @@ const before = new Map(
     originals.map(async (doc) => [doc.path, await hash(doc.path)] as const),
   ),
 );
-const forms = (await readContent('templates/작성양식')).filter(
+const forms = (await readContent('docs/templates/작성양식')).filter(
   (doc) => doc.id !== 'README',
 );
 // Compile the exact documented MDX example, so copy/paste guidance cannot drift.
-const guide = await readFile('templates/작성양식/README.md', 'utf8');
+const guide = await readFile('docs/templates/작성양식/README.md', 'utf8');
 const example = guide.match(/```mdx\n([\s\S]*?)\n```/)?.[1];
 assert.ok(example, 'The authoring guide must contain a usable MDX example');
 const attachmentExample = example
@@ -82,7 +82,7 @@ try {
   ownsAssets = true;
   await writeFile(
     `${assets}/reference.png`,
-    await readFile('public/references/osi-stack.png'),
+    await readFile('docs/assets/references/osi-stack.png'),
   );
   // Valid empty PCAP header for download QA only: no packets or lab measurements.
   const pcap = Buffer.alloc(24);

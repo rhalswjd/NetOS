@@ -1,23 +1,61 @@
 # NetOS
 
-운영체제와 네트워크를 **시각화로 탐색하고, Markdown으로 기록하는 지식 아카이브**입니다.
+**Network × Operating System — 시각화로 연결하는 시스템 지식**
 
-Astro · Starlight · TypeScript · Markdown/MDX · Pagefind를 사용하며, 정적 사이트로 GitHub Pages에 배포합니다.
+운영체제와 네트워크의 개념을 지도처럼 탐색하고, 학습·실험·탐구·문제 풀이를 Markdown으로 쌓아가는 개인 지식 아카이브입니다.
 
-[글 작성 가이드](templates/작성양식/README.md) · [개발 가이드](docs/DEVELOPMENT.md) · [테스트 안내](tests/README.md) · [검증 기록](docs/QA.md)
+[사이트 미리보기](#사이트-미리보기) · [로컬 실행](#로컬-실행) · [글 작성 가이드](docs/templates/작성양식/README.md) · [개발 문서](docs/README.md)
+
+> **배포 상태: 아직 미배포입니다.** GitHub Pages 배포 설정은 준비되어 있으며, 아래 미리보기는 로컬 프로덕션 빌드를 직접 캡처한 화면입니다.
+
+## 사이트 미리보기
+
+![NetOS 홈 — Network와 Operating System 탐색 카드 및 Knowledge Archive](docs/assets/previews/home.png)
+
+<details>
+<summary>Network / OS 탐색 화면 보기</summary>
+
+| Network                                                                | Operating System                                                            |
+| ---------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| ![Sierra Blue 원통형 OSI 7계층 탐색](docs/assets/previews/network.png) | ![OS Kernel Architecture Map과 하위 영역 탐색](docs/assets/previews/os.png) |
+
+</details>
 
 ## 주요 기능
 
-| 영역      | 기능                                                            |
-| --------- | --------------------------------------------------------------- |
-| Home      | 떠 있는 Network / OS 카드와 Knowledge Archive                   |
-| Network   | Sierra Blue 원통형 OSI 7계층과 계층별 개념 탐색                 |
-| OS        | 커널 아키텍처 지도, 8개 하위 영역과 Topics 보기                 |
-| Archive   | Concepts · Labs · Research · Problems의 검색·필터·정렬          |
-| 문서      | 개념 ID에 따른 양방향 관련 콘텐츠, 목차, 코드 복사, Mermaid     |
-| 읽기 환경 | 전체 본문 검색, 다크 모드, 모바일·키보드 탐색, 동작 줄이기 지원 |
+### Network
 
-## 빠른 시작
+- Sierra Blue 원통형 **OSI 7계층** 시각화
+- 계층별 역할·프로토콜·연결된 개념을 탐색하는 허브
+- 키보드와 터치로 이동할 수 있는 실제 문서 링크
+
+### Operating System
+
+- **Kernel Architecture Map**으로 보는 운영체제 구성
+- 프로세스·스케줄링·동기화·메모리·파일 시스템·I/O 등 하위 영역 탐색
+- 아키텍처 지도와 목록형 **Topics** 보기 전환
+
+### Knowledge Archive
+
+- **Concepts · Labs · Research · Problems** 네 종류의 문서
+- 주제·분류·태그·난이도 필터와 검색·정렬
+- `topicId` / `relatedTopicIds`를 통한 **양방향 관련 콘텐츠 자동 연결**
+- Pagefind 본문 검색, Mermaid, 코드 복사, 문제 정답 접기
+- 다크 모드, 모바일, 키보드 탐색, reduced-motion 지원
+
+## 주요 기술
+
+| 기술                          | 역할                             |
+| ----------------------------- | -------------------------------- |
+| Astro                         | 정적 페이지와 파일 기반 라우팅   |
+| Starlight                     | 문서 레이아웃·목차·탐색          |
+| TypeScript · Zod              | 타입 및 콘텐츠 메타데이터 검증   |
+| Markdown / MDX                | 문서 작성과 이미지·첨부파일 연결 |
+| Pagefind · Mermaid            | 정적 본문 검색과 다이어그램      |
+| Playwright · Node test runner | 브라우저·단위·통합 검증          |
+| GitHub Actions · Pages        | 검사 후 정적 사이트 배포         |
+
+## 로컬 실행
 
 **Node.js 24 LTS**와 npm을 사용합니다. 버전 기준은 [`.nvmrc`](.nvmrc)에 있습니다.
 
@@ -26,105 +64,104 @@ npm ci
 npm run dev
 ```
 
-브라우저에서 터미널에 표시된 Local 주소를 엽니다.
+터미널에 표시되는 Local 주소를 브라우저에서 엽니다.
 
-전체 본문 검색은 프로덕션 빌드 시 생성됩니다. 검색까지 확인하려면 다음 명령을 사용하세요.
+본문 검색 인덱스는 프로덕션 빌드에서 생성됩니다. 검색까지 확인하려면 다음과 같이 실행합니다.
 
 ```sh
 npm run build
 npm run preview
 ```
 
-## 글 작성과 게시
+## 문서 작성
 
-1. **[기본 작성양식](templates/작성양식/README.md)**에서 필요한 양식을 복사합니다.
+1. **[작성 가이드와 기본 양식](docs/templates/작성양식/README.md)**에서 필요한 양식을 복사합니다.
 2. 아래 위치에 새 `.md` 또는 `.mdx` 파일을 만들고 제목·본문·메타데이터를 작성합니다.
-3. 게시 준비가 되면 `draft: false`로 바꾸고 검증합니다.
-4. GitHub Pages 최초 설정 이후에는 `main`에 커밋할 때마다 검사·빌드·배포가 실행됩니다.
+3. `topicId` 또는 `relatedTopicIds`를 지정하고 `npm run validate`로 검사합니다.
+4. 공개할 준비가 되면 `draft: false`로 변경합니다.
 
-| 종류     | 저장 위치                                                             |
-| -------- | --------------------------------------------------------------------- |
-| Concepts | `src/content/docs/network/topics/` 또는 `src/content/docs/os/topics/` |
-| Labs     | `src/content/docs/labs/`                                              |
-| Research | `src/content/docs/research/`                                          |
-| Problems | `src/content/docs/problems/`                                          |
+| 문서 종류 | 저장 위치                                                             |
+| --------- | --------------------------------------------------------------------- |
+| Concepts  | `src/content/docs/network/topics/` 또는 `src/content/docs/os/topics/` |
+| Labs      | `src/content/docs/labs/`                                              |
+| Research  | `src/content/docs/research/`                                          |
+| Problems  | `src/content/docs/problems/`                                          |
 
-개념은 고유한 `topicId`를 갖고, 실험·연구·문제는 `relatedTopicIds`로 개념을 연결합니다. 새 글을 추가할 때 화면 코드나 관련 글 목록을 수정할 필요가 없습니다.
+새 문서를 추가하면 아카이브·탐색 허브·관련 콘텐츠가 함께 갱신됩니다. 화면 코드나 관련 글 목록을 수동으로 수정할 필요가 없습니다.
 
-- `draft: true`인 글은 프로덕션 페이지·목록·검색에서 제외됩니다. 초안도 메타데이터·참조 검사를 통과해야 합니다.
+- 초안은 프로덕션 페이지·목록·검색에서 제외되며 메타데이터·참조 검사는 통과해야 합니다.
 - 공개 글이 참조하는 개념도 공개 상태여야 합니다.
-- 이미지·PCAP 연결, 문제 정답 접기, 출처 작성법은 작성 가이드에 정리되어 있습니다.
-- 기존 샘플 글 9개는 유지합니다. DHCP 실험은 미수행 상태이며 실제 관찰값을 꾸며 넣지 않았습니다.
+- 이미지·PCAP, 문제 출처와 정답 접기는 작성 가이드의 검증된 예시를 사용합니다.
+- 기존 샘플 글 9개를 포함합니다. DHCP 실험은 미수행 상태로 표시되어 있습니다.
 
-GitHub에서 편집한 내용은 배포 사이트에 반영됩니다. 로컬 작업 폴더에도 반영하려면 `git pull`이 필요합니다.
-
-## 프로젝트 구조
+## 폴더 구조
 
 ```text
-src/
-├── pages/           # Home, Network, OS, Archive 페이지
-├── content/docs/    # 게시할 Markdown / MDX
-├── components/      # 공통 UI와 Starlight 문서 구성
-├── lib/             # 스키마·분류·자동 연결·배포 경로
-├── config/          # 연락처 설정
-└── styles/          # 공통·문서 스타일
-public/
-├── artifacts/       # 실제 이미지·비식별화한 첨부파일
-└── references/      # 디자인 참고 이미지
-scripts/             # 빌드에 필요한 검증·Markdown 처리 도구
-tests/
-├── unit/            # 스키마·레지스트리·참조 검증
-├── browser/         # 데스크톱·모바일 Playwright 테스트
-├── integration/     # 실제 문서 추가·빌드·양식 검증
-└── visual/          # 수동 화면 캡처 도구
-templates/
-├── 작성양식/        # 새 글에 사용하는 기본 양식
-└── archive/         # 비교·보관용 이전 자료
-docs/                # 개발 안내와 검증 기록
-.github/workflows/   # GitHub Pages 검사·배포
+NetOS/
+├── .github/workflows/     # GitHub Pages 검사·배포
+├── docs/
+│   ├── README.md          # 문서 찾아보기
+│   ├── DEVELOPMENT.md     # 구조·라우팅·배포 설정
+│   ├── TESTING.md         # 테스트·화면 캡처 안내
+│   ├── QA.md              # 실제 검증 기록
+│   ├── templates/        # 기본 작성양식과 이전 양식 보관
+│   └── assets/           # 사이트 미리보기·디자인 참고 이미지
+├── public/               # favicon·실제 문서 첨부파일
+├── scripts/              # 콘텐츠·출력 검증과 Markdown 처리
+├── src/
+│   ├── components/       # 공통 UI와 문서 구성
+│   ├── config/           # 연락처 설정
+│   ├── content/docs/     # 게시할 Markdown / MDX
+│   ├── lib/              # 스키마·분류·자동 연결·공개 경로
+│   ├── pages/            # Home·Network·OS·Archive
+│   └── styles/           # 공통·문서 스타일
+├── tests/                # unit·browser·integration·visual
+├── AGENTS.md             # 프로젝트 작업 규칙
+├── astro.config.mjs      # Astro / Starlight 설정
+├── package.json          # 의존성과 실행 명령
+├── package-lock.json     # 재현 가능한 의존성 설치
+├── playwright.config.ts  # 브라우저 검증 설정
+└── tsconfig.json         # TypeScript 설정
 ```
 
-기존 글에서 참조하는 `templates/*.md` 영문 기본 양식도 호환용으로 유지합니다. 새 글에는 `templates/작성양식/`을 사용하세요.
+`.env.example`, `.nvmrc`, `.prettierrc.json`, `.prettierignore` 등 도구가 찾는 설정도 루트에 유지합니다. 로컬 Apple 디자인 스킬은 Git에서 제외합니다.
 
 ## 검증
 
-최초 한 번 브라우저 테스트에 필요한 Chromium을 설치합니다.
+최초 한 번 Chromium을 설치한 뒤 전체 검사를 실행합니다.
 
 ```sh
 npx playwright install chromium
-```
-
-일반 검증은 다음 명령으로 실행합니다.
-
-```sh
 npm run qa
 ```
 
-타입 검사 → 단위 테스트 → 프로덕션 빌드 → 내부 링크 검사 → 브라우저 테스트 순서로 진행합니다.
+`qa`는 타입 검사 → 단위 테스트 → 프로덕션 빌드 → 내부 링크 검사 → 브라우저 테스트 순서로 실행합니다.
 
-| 명령                     | 용도                                                     |
-| ------------------------ | -------------------------------------------------------- |
-| `npm run validate`       | 메타데이터·분류·개념 ID와 참조 검증                      |
-| `npm run check`          | Astro 및 TypeScript 타입 검사                            |
-| `npm test`               | 단위 테스트                                              |
-| `npm run test:e2e`       | 빌드된 사이트의 데스크톱·모바일 브라우저 테스트          |
-| `npm run test:discovery` | 문서 자동 발견·교차 분류·MDX Mermaid 실제 빌드 검사      |
-| `npm run test:templates` | 양식 4종의 MD/MDX·정답 접기·검색 제외·첨부파일·초안 검사 |
+| 명령                     | 목적                                               |
+| ------------------------ | -------------------------------------------------- |
+| `npm run validate`       | 메타데이터·분류·ID·참조 검증                       |
+| `npm run check`          | Astro / TypeScript 타입 검사                       |
+| `npm test`               | 단위 테스트                                        |
+| `npm run test:e2e`       | 빌드된 사이트의 데스크톱·모바일 브라우저 검사      |
+| `npm run test:discovery` | Markdown 자동 발견·교차 연결·MDX Mermaid 빌드 검사 |
+| `npm run test:templates` | 양식·정답 접기·검색 제외·첨부파일·초안 검사        |
 
-`test:e2e` 전에 `npm run build`가 필요합니다. 통합 테스트 두 개는 임시 문서와 `dist/`를 변경한 뒤 정리·복원하므로 다른 빌드와 동시에 실행하지 마세요. 하위 경로·화면 캡처 검사는 [테스트 안내](tests/README.md)를 참고하세요.
+통합 테스트는 임시 문서와 빌드 결과를 생성한 뒤 정리·복원합니다. 다른 빌드와 동시에 실행하지 마세요. 자세한 실행법과 미리보기 이미지 갱신법은 [테스트 안내](docs/TESTING.md)에 있습니다.
 
 ## GitHub Pages 배포
 
-1. 프로젝트와 `package-lock.json`을 GitHub 저장소에 올립니다. 배포 기준 브랜치는 `main`입니다.
+배포 워크플로는 설정되어 있지만 **실제 원격 배포는 아직 수행하지 않았습니다.**
+
+1. 프로젝트를 GitHub 저장소에 올립니다. 배포 기준 브랜치는 `main`입니다.
 2. 저장소 **Settings → Pages → Build and deployment → Source**를 **GitHub Actions**로 선택합니다.
-3. `main`에 커밋하거나 Actions에서 **Validate and deploy to GitHub Pages**를 수동 실행합니다.
+3. `main`에 변경을 반영하거나 Actions에서 **Validate and deploy to GitHub Pages**를 수동 실행합니다.
 
-[배포 워크플로](.github/workflows/deploy.yml)는 타입·내용·단위·빌드·링크·브라우저 검사가 모두 성공한 경우에 배포합니다. 저장소 이름에서 사이트 주소와 하위 경로를 계산하며, 사용자 사이트와 커스텀 도메인 설정은 [개발 가이드](docs/DEVELOPMENT.md#배포-설정)에 있습니다.
+[배포 워크플로](.github/workflows/deploy.yml)는 검사가 모두 성공한 경우에 배포합니다. 이후 Markdown 변경도 같은 흐름으로 반영됩니다. 로컬 작업 폴더를 GitHub 변경과 맞추려면 `git pull`이 필요합니다.
 
-## 연락처와 추가 문서
+저장소 하위 경로·사용자 사이트·커스텀 도메인 설정은 [개발 가이드](docs/DEVELOPMENT.md#배포-설정)를 참고하세요.
 
-- 푸터의 GitHub·Email은 [`src/config/contact.ts`](src/config/contact.ts)에서 설정합니다. 현재 빈 값은 링크 없는 라벨로 표시됩니다.
-- [개발 가이드](docs/DEVELOPMENT.md): 메타데이터·라우팅·자동 연결·배포 설정
-- [글 작성 가이드](templates/작성양식/README.md): 양식·이미지·PCAP·출처·게시 절차
-- [테스트 안내](tests/README.md): 테스트 분류·실행 방법·화면 캡처
-- [검증 기록](docs/QA.md): 실제 수행한 검사 결과와 검증 범위
+## 문서와 연락처
+
+[문서 모음](docs/README.md) · [작성 양식](docs/templates/README.md) · [테스트 안내](docs/TESTING.md) · [검증 기록](docs/QA.md)
+
+푸터의 GitHub·Email은 [`src/config/contact.ts`](src/config/contact.ts)에서 설정합니다. 현재 빈 값은 링크 없는 라벨로 표시됩니다.

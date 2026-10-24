@@ -1,6 +1,6 @@
 # 개발 가이드
 
-[프로젝트 소개](../README.md) · [글 작성](../templates/작성양식/README.md) · [테스트 안내](../tests/README.md)
+[프로젝트 소개](../README.md) · [글 작성](templates/작성양식/README.md) · [테스트 안내](TESTING.md)
 
 ## 기술 구성
 
@@ -35,7 +35,7 @@ Concept의 `topicId`는 제목을 수정해도 유지하는 안정적인 ID입�
 - 개념 사이의 양방향 관계와 같은 개념을 공유하는 관련 글
 - 주 분류 및 참조 개념의 분류에 해당하는 탐색 허브
 
-아카이브 필터의 대표 분류는 `primaryCategory`입니다. 공개 글은 공개 Concept만 참조할 수 있으며, 초안에서도 없는 ID는 허용하지 않습니다. 세부 필드와 예시는 [작성 가이드](../templates/작성양식/README.md)를 참고하세요.
+아카이브 필터의 대표 분류는 `primaryCategory`입니다. 공개 글은 공개 Concept만 참조할 수 있으며, 초안에서도 없는 ID는 허용하지 않습니다. 세부 필드와 예시는 [작성 가이드](templates/작성양식/README.md)를 참고하세요.
 
 분류를 추가할 때는 `taxonomy.ts`를 수정합니다. 일곱 OSI 계층은 유지하며, OS 분류 변경 시 아키텍처 지도와 테스트의 일관성도 확인합니다.
 
@@ -74,6 +74,6 @@ BASE_PATH=/NetOS npm run verify:dist
 
 ## 디자인과 검증
 
-기존 참고 이미지는 `public/references/`, 디자인 지침은 [Apple design skill](../.agent/skills/apple-design/SKILL.md)에 있습니다. 사용자 정의 화면과 Starlight 문서의 스타일을 일관되게 유지하며 키보드·터치·모바일·reduced-motion 동작을 함께 확인합니다.
+참고 이미지는 `docs/assets/references/`에 보관합니다. Apple 디자인 스킬은 로컬의 `.agent/skills/apple-design/`에 있을 때만 참고하며 Git 추적에서 제외합니다. 사용자 정의 화면과 Starlight 문서의 스타일을 일관되게 유지하며 키보드·터치·모바일·reduced-motion 동작을 함께 확인합니다.
 
-테스트·캡처 명령은 [테스트 안내](../tests/README.md), 실제 수행 결과와 제한은 [검증 기록](QA.md)에 정리합니다.
+테스트·캡처 명령은 [테스트 안내](TESTING.md), 실제 수행 결과와 제한은 [검증 기록](QA.md)에 정리합니다.

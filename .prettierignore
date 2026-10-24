@@ -2,7 +2,7 @@ node_modules/
 dist/
 .astro/
 .agent/
-public/references/
+docs/assets/
 package-lock.json
 playwright-report/
 test-results/

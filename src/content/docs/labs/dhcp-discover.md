@@ -54,7 +54,7 @@ Wireshark 표시 필터:
 udp.port == 67 || udp.port == 68
 ```
 
-스크린샷과 정제한 PCAP를 첨부하는 방법은 저장소의 README와 `templates/lab.md`를 참고한다.
+스크린샷과 정제한 PCAP를 첨부하는 방법은 저장소의 README와 `docs/templates/작성양식/README.md`를 참고한다.
 
 ## 해석
 
