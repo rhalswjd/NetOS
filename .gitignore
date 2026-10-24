@@ -8,6 +8,9 @@ playwright-report/
 test-results/
 .DS_Store
 
+# Local-only design skill (keep the file on disk)
+/.agent/skills/apple-design/
+
 # Local logs, caches and generated reports
 *.log
 logs/

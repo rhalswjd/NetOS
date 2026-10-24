@@ -261,23 +261,25 @@ test('source attribution accepts real web URLs and rejects unsafe or malformed U
 });
 
 test('the separate authoring templates validate and never enter public collections', async () => {
-  const templates = await readContent('templates/작성양식');
+  const templates = await readContent('docs/templates/작성양식');
   // The authoring guide is documentation, not a frontmatter-bearing template.
   const forms = templates.filter((doc) => doc.id !== 'README');
   assert.equal(forms.length, 4);
   const result = validateDocuments([...sources, ...forms]);
   assert.equal(
-    result.filter((doc) => doc.path.startsWith('templates/')).length,
+    result.filter((doc) => doc.path.startsWith('docs/templates/')).length,
     4,
   );
   assert.ok(forms.every((doc) => (doc.data as { draft?: boolean }).draft));
-  assert.ok(index.documents.every((doc) => !doc.path.startsWith('templates/')));
+  assert.ok(
+    index.documents.every((doc) => !doc.path.startsWith('docs/templates/')),
+  );
 });
 
 test('both template sets support publishing all four types with the existing schema', async () => {
   const directories = [
-    'templates/작성양식',
-    'templates/archive/작성양식-개선원본',
+    'docs/templates/작성양식',
+    'docs/templates/archive/작성양식-개선원본',
   ];
   for (const directory of directories) {
     const forms = (await readContent(directory)).filter(
@@ -296,7 +298,7 @@ test('both template sets support publishing all four types with the existing sch
     assert.deepEqual(
       publishedIndex
         .related(publishedIndex.topics.get('network.dhcp')!)
-        .filter((doc) => doc.path.startsWith('templates/'))
+        .filter((doc) => doc.path.startsWith('docs/templates/'))
         .map((doc) => doc.data.type)
         .sort(),
       ['lab', 'problem', 'research'],
@@ -312,7 +314,7 @@ test('both template sets support publishing all four types with the existing sch
 });
 
 test('template references are validated even while draft and publication rejects draft targets', async () => {
-  const forms = (await readContent('templates/작성양식')).filter(
+  const forms = (await readContent('docs/templates/작성양식')).filter(
     (doc) => doc.id !== 'README',
   );
   const lab = forms.find(

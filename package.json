@@ -20,7 +20,8 @@
     "test:discovery": "node --import tsx tests/integration/discovery.ts",
     "test:templates": "node --import tsx tests/integration/templates.ts",
     "capture:preview": "node tests/visual/capture-preview.mjs",
-    "capture:reader": "node tests/visual/capture-reader.mjs"
+    "capture:reader": "node tests/visual/capture-reader.mjs",
+    "capture:readme": "node tests/visual/capture-preview.mjs --readme"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.4",

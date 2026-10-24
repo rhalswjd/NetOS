@@ -37,7 +37,7 @@
 - `problemKind`: `multiple-choice`, `short-answer`, `calculation`, `explanation`.
 - `source`, `sourceUrl`: 문제 또는 연구의 출처·원문 주소. URL은 주석을 해제한 뒤 실제 주소 사용.
 
-분류 기준은 [`src/lib/taxonomy.ts`](../../src/lib/taxonomy.ts)입니다. OS 분류는 해당 파일의 `osAreas`에 있는 `id`를 사용합니다. 정확한 필드 허용값은 [`src/lib/schema.ts`](../../src/lib/schema.ts), 도메인별 분류·필수 연결 조건은 [`src/lib/validate-content.ts`](../../src/lib/validate-content.ts)에서 검사합니다.
+분류 기준은 [`src/lib/taxonomy.ts`](../../../src/lib/taxonomy.ts)입니다. OS 분류는 해당 파일의 `osAreas`에 있는 `id`를 사용합니다. 정확한 필드 허용값은 [`src/lib/schema.ts`](../../../src/lib/schema.ts), 도메인별 분류·필수 연결 조건은 [`src/lib/validate-content.ts`](../../../src/lib/validate-content.ts)에서 검사합니다.
 
 `sourceUrl`은 실제 `https://` 또는 `http://` 원문 주소만 허용합니다. 빈 문자열이나 `여기에 URL` 같은 안내문을 값으로 입력하면 검증이 실패합니다. Concept의 `topicId`는 도메인 접두사와 영문 소문자·숫자·점·하이픈으로 작성합니다.
 
