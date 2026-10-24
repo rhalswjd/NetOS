@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { url } from '../lib/routes';
+---
+
+<Layout title="Page not found" noindex>
+  <section class="archive-header" style="padding-block:100px">
+    <p class="eyebrow">404 · ANOTHER PATH TO EXPLORE</p>
+    <h1>This page is out of reach.</h1>
+    <p>
+      It may have moved. Return to the overview, explore a subject, or search
+      the archive.
+    </p>
+    <div class="keyword-list">
+      <a href={url('/')}>Back to overview →</a>
+      <a href={url('/network/')}>Network</a>
+      <a href={url('/os/')}>Operating System</a>
+      <a href={url('/archive/concepts/')}>Knowledge Archive</a>
+    </div>
+  </section>
+</Layout>

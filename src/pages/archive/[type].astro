@@ -1,0 +1,246 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import DocumentCard from '../../components/DocumentCard.astro';
+import { getContentIndex } from '../../lib/content-index';
+import { documentTypes, taxonomy } from '../../lib/taxonomy';
+import { url } from '../../lib/routes';
+export function getStaticPaths() {
+  return documentTypes.map((t) => ({
+    params: { type: t.slug },
+    props: { type: t },
+  }));
+}
+const { type } = Astro.props;
+const { documents } = await getContentIndex();
+const entries = documents.filter((d) => d.data.type === type.type);
+const tags = [...new Set(entries.flatMap((d) => d.data.tags))].sort();
+const kinds = [
+  ...new Set(
+    entries.flatMap((d) => (d.data.problemKind ? [d.data.problemKind] : [])),
+  ),
+].sort();
+---
+
+<Layout title={`${type.label} Archive`} description={type.description}>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href={url('/')}>Overview</a>
+    <Icon name="chevron" size={12} />
+    <span>Knowledge Archive</span>
+  </nav>
+  <div class="archive-header">
+    <p class="eyebrow">KNOWLEDGE, CONNECTED</p>
+    <h1>{type.label}</h1>
+    <p>{type.description}</p>
+  </div>
+  <nav class="archive-tabs" aria-label="Document types">
+    {documentTypes.map((t) => (
+      <a
+        href={url(`/archive/${t.slug}/`)}
+        aria-current={t.type === type.type ? 'page' : undefined}
+      >
+        <Icon name={t.icon} size={17} />
+        {t.label}
+      </a>
+    ))}
+  </nav>
+  <form
+    id="archive-filters"
+    class="filter-panel"
+    role="search"
+    aria-label={`Filter ${type.label.toLowerCase()}`}
+  >
+    <div class="archive-search">
+      <Icon name="search" size={18} />
+      <label class="sr-only" for="archive-query">
+        Search {type.label.toLowerCase()}
+      </label>
+      <input
+        id="archive-query"
+        name="q"
+        type="search"
+        placeholder={`Search ${type.label.toLowerCase()}…`}
+        autocomplete="off"
+      />
+    </div>
+    <div class="filters">
+      <label>
+        Subject
+        <select name="domain">
+          <option value="">All subjects</option>
+          <option value="network">Network</option>
+          <option value="os">Operating System</option>
+        </select>
+      </label>
+      <label>
+        Category
+        <select name="category">
+          <option value="">All categories</option>
+          {Object.entries(taxonomy).map(([domain, categories]) =>
+            categories.map((c) => (
+              <option value={c.id} data-domain={domain}>
+                {domain === 'network' ? `${c.id.toUpperCase()} · ` : 'OS · '}
+                {c.name}
+              </option>
+            )),
+          )}
+        </select>
+      </label>
+      <label>
+        Tag
+        <select name="tag">
+          <option value="">All tags</option>
+          {tags.map((tag) => (
+            <option value={tag}>{tag}</option>
+          ))}
+        </select>
+      </label>
+      {type.type === 'problem' && (
+        <>
+          <label>
+            Difficulty
+            <select name="difficulty">
+              <option value="">All difficulties</option>
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </label>
+          <label>
+            Problem type
+            <select name="kind">
+              <option value="">All types</option>
+              {kinds.map((kind) => (
+                <option value={kind}>{kind}</option>
+              ))}
+            </select>
+          </label>
+        </>
+      )}
+      <label>
+        Sort by
+        <select name="sort">
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="title">Title A–Z</option>
+        </select>
+      </label>
+    </div>
+  </form>
+  <div class="archive-result-heading">
+    <p id="result-count" role="status" aria-live="polite">
+      {entries.length} {entries.length === 1 ? 'document' : 'documents'}
+    </p>
+    <button class="reset-filters" type="reset" form="archive-filters">
+      Reset filters
+    </button>
+  </div>
+  <div id="archive-results" class="document-grid">
+    {entries.map((document) => (
+      <DocumentCard document={document} />
+    ))}
+  </div>
+  <div class="archive-empty" id="archive-empty" hidden>
+    <h2>No matching documents</h2>
+    <p>Try another search or reset the filters to see the whole collection.</p>
+  </div>
+  <noscript>
+    <p class="empty-inline">
+      All documents are listed above. Enable JavaScript to search, sort, and
+      filter this archive.
+    </p>
+  </noscript>
+</Layout>
+<script>
+  const form = document.querySelector<HTMLFormElement>('#archive-filters')!;
+  const grid = document.querySelector<HTMLElement>('#archive-results')!;
+  const cards = Array.from(
+    grid.querySelectorAll<HTMLElement>('[data-document-card]'),
+  );
+  const count = document.querySelector<HTMLElement>('#result-count')!;
+  const empty = document.querySelector<HTMLElement>('#archive-empty')!;
+  const control = (name: string) =>
+    form.elements.namedItem(name) as
+      HTMLInputElement | HTMLSelectElement | null;
+  const names = [
+    'q',
+    'domain',
+    'category',
+    'tag',
+    'difficulty',
+    'kind',
+    'sort',
+  ];
+  function loadParams() {
+    const params = new URLSearchParams(location.search);
+    for (const name of names) {
+      const field = control(name);
+      if (field)
+        field.value = params.get(name) ?? (name === 'sort' ? 'newest' : '');
+    }
+  }
+  function apply(updateUrl = true) {
+    const value = (name: string) => control(name)?.value ?? '';
+    const domain = value('domain');
+    const category = control('category') as HTMLSelectElement;
+    for (const option of Array.from(category.options)) {
+      option.hidden = !!(
+        domain &&
+        option.dataset.domain &&
+        option.dataset.domain !== domain
+      );
+      option.disabled = option.hidden;
+    }
+    if (category.selectedOptions[0]?.disabled) category.value = '';
+    const q = value('q').toLocaleLowerCase().trim();
+    let matches = 0;
+    for (const card of cards) {
+      const d = card.dataset;
+      const tags: string[] = JSON.parse(d.tags ?? '[]');
+      card.hidden = !(
+        (!q ||
+          `${d.title} ${d.description} ${tags.join(' ')}`
+            .toLocaleLowerCase()
+            .includes(q)) &&
+        (!domain || d.domain === domain) &&
+        (!value('category') || d.category === value('category')) &&
+        (!value('tag') || tags.includes(value('tag'))) &&
+        (!value('difficulty') || d.difficulty === value('difficulty')) &&
+        (!value('kind') || d.kind === value('kind'))
+      );
+      if (!card.hidden) matches++;
+    }
+    cards
+      .sort((a, b) =>
+        value('sort') === 'title'
+          ? (a.dataset.title ?? '').localeCompare(b.dataset.title ?? '')
+          : (value('sort') === 'oldest' ? 1 : -1) *
+            (Date.parse(a.dataset.date!) - Date.parse(b.dataset.date!)),
+      )
+      .forEach((card) => grid.append(card));
+    count.textContent = `${matches} ${matches === 1 ? 'document' : 'documents'}`;
+    empty.hidden = matches !== 0;
+    if (updateUrl) {
+      const u = new URL(location.href);
+      for (const name of names) {
+        const v = value(name);
+        if (v && !(name === 'sort' && v === 'newest'))
+          u.searchParams.set(name, v);
+        else u.searchParams.delete(name);
+      }
+      history.replaceState(null, '', u);
+    }
+  }
+  form.addEventListener('submit', (e) => e.preventDefault());
+  form.addEventListener('input', () => apply());
+  form.addEventListener('change', () => apply());
+  form.addEventListener('reset', () => {
+    queueMicrotask(() => apply());
+  });
+  window.addEventListener('popstate', () => {
+    loadParams();
+    apply(false);
+  });
+  loadParams();
+  apply(false);
+</script>

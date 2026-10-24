@@ -1,0 +1,58 @@
+---
+import type { Document } from '../lib/validate-content';
+import { docUrl } from '../lib/routes';
+import { categoryFor, documentTypes } from '../lib/taxonomy';
+import Icon from './Icon.astro';
+interface Props {
+  document: Document;
+}
+const { document: doc } = Astro.props;
+const d = doc.data;
+const type = documentTypes.find((t) => t.type === d.type)!;
+const date = d.updatedAt ?? d.createdAt;
+---
+
+<a
+  class="document-card"
+  href={docUrl(doc.id)}
+  data-document-card
+  data-title={d.title.toLowerCase()}
+  data-description={d.description.toLowerCase()}
+  data-domain={d.domain}
+  data-category={d.primaryCategory}
+  data-tags={JSON.stringify(d.tags)}
+  data-date={date.toISOString()}
+  data-difficulty={d.difficulty ?? ''}
+  data-kind={d.problemKind ?? ''}
+>
+  <div class="document-card-meta">
+    <span class="doc-type">
+      <Icon name={type.icon} size={15} />
+      {type.label}
+    </span>
+    <span>
+      {d.domain === 'network' ? 'Network' : 'OS'}{' '}
+      <span class="meta-dot">·</span>{' '}
+      {categoryFor(d.domain, d.primaryCategory)?.name}
+    </span>
+  </div>
+  <h3>{d.title}</h3>
+  <p>{d.description}</p>
+  <div class="document-card-bottom">
+    <span class="tags">
+      {d.tags.slice(0, 3).map((tag) => (
+        <span>{tag}</span>
+      ))}
+      {d.difficulty && <span class="difficulty">{d.difficulty}</span>}
+    </span>
+    <Icon name="arrow" size={18} />
+  </div>
+  <time datetime={date.toISOString()} class="card-date">
+    {date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      timeZone: 'UTC',
+    })}
+  </time>
+</a>

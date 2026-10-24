@@ -1,0 +1,36 @@
+---
+import DocumentCard from './DocumentCard.astro';
+import { documentTypes } from '../lib/taxonomy';
+import type { Document } from '../lib/validate-content';
+interface Props {
+  documents: Document[];
+  showEmpty?: boolean;
+}
+const { documents, showEmpty = true } = Astro.props;
+---
+
+<div class="related-content">
+  {documentTypes.map((type) => {
+    const docs = documents.filter((d) => d.data.type === type.type);
+    return docs.length || showEmpty ? (
+      <section class="content-group">
+        <div class="section-heading">
+          <h2>{type.label}</h2>
+          <span class="count">{docs.length}</span>
+        </div>
+        {docs.length ? (
+          <div class="document-grid">
+            {docs.map((document) => (
+              <DocumentCard document={document} />
+            ))}
+          </div>
+        ) : (
+          <p class="empty-inline">
+            No {type.label.toLowerCase()} here yet. New documents appear here
+            automatically when they’re added to this topic.
+          </p>
+        )}
+      </section>
+    ) : null;
+  })}
+</div>

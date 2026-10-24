@@ -1,0 +1,10 @@
+---
+import Hub from '../../../components/Hub.astro';
+import { networkLayers } from '../../../lib/taxonomy';
+export function getStaticPaths() {
+  return networkLayers.map((l) => ({ params: { layer: l.id } }));
+}
+const { layer } = Astro.params;
+---
+
+<Hub domain="network" id={layer!} />

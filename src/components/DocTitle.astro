@@ -1,0 +1,60 @@
+---
+import Default from '@astrojs/starlight/components/PageTitle.astro';
+import Icon from './Icon.astro';
+import { categoryFor, categoryPath, documentTypes } from '../lib/taxonomy';
+import { url } from '../lib/routes';
+const d = Astro.locals.starlightRoute.entry.data;
+const category = categoryFor(d.domain, d.primaryCategory)!;
+const type = documentTypes.find((t) => t.type === d.type)!;
+---
+
+<nav class="breadcrumbs doc-breadcrumbs" aria-label="Breadcrumb">
+  <a href={url(`/${d.domain}/`)}>
+    {d.domain === 'network' ? 'Network' : 'Operating System'}
+  </a>
+  <Icon name="chevron" size={12} />
+  <a href={url(categoryPath(d.domain, d.primaryCategory))}>{category.name}</a>
+  <Icon name="chevron" size={12} />
+  <span>{type.label}</span>
+</nav>
+<div class="doc-title-meta">
+  <span class="topic-badge">
+    <Icon name={type.icon} size={14} />
+    {d.type}
+  </span>
+  <span>
+    {d.createdAt.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+      timeZone: 'UTC',
+    })}
+  </span>
+  {d.difficulty && (
+    <span class="difficulty">
+      {d.difficulty} · {d.problemKind}
+    </span>
+  )}
+</div>
+<Default />
+<p class="doc-description">{d.description}</p>
+<div class="keyword-list">
+  {d.tags.map((tag) => (
+    <a href={url(`/archive/${type.slug}/?tag=${encodeURIComponent(tag)}`)}>
+      {tag}
+    </a>
+  ))}
+</div>
+
+{(d.source || d.sourceUrl) && (
+  <p class="source-attribution">
+    <span>출처</span>
+    {d.sourceUrl ? (
+      <a href={d.sourceUrl} rel="external">
+        {d.source || '원문 보기'}
+      </a>
+    ) : (
+      d.source
+    )}
+  </p>
+)}
