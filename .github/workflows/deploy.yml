@@ -1,0 +1,47 @@
+name: Validate and deploy to GitHub Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SITE_URL: ${{ vars.SITE_URL }}
+      BASE_PATH: ${{ vars.BASE_PATH }}
+      REPOSITORY_URL: ${{ vars.REPOSITORY_URL }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+      - name: Validate, test, build and upload the static site
+        uses: withastro/action@v6
+        with:
+          node-version: 24
+          # Reject lockfile changes, then perform a frozen npm install before checks.
+          # It uploads the Pages artifact only if the entire command succeeds.
+          build-cmd: >-
+            git diff --exit-code -- package-lock.json &&
+            npm ci &&
+            npm run check &&
+            npm test &&
+            npm run build &&
+            npm run verify:dist &&
+            npx playwright install --with-deps chromium &&
+            npm run test:e2e
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish the validated artifact
+        id: deployment
+        uses: actions/deploy-pages@v5

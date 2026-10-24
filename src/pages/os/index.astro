@@ -1,0 +1,166 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import { osAreas } from '../../lib/taxonomy';
+import { url } from '../../lib/routes';
+---
+
+<Layout
+  title="Operating System"
+  description="Explore how user applications, system calls, kernel subsystems, and hardware work together."
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href={url('/')}>Overview</a>
+    <Icon name="chevron" size={12} />
+    <span>Operating System</span>
+  </nav>
+  <div class="explorer-heading">
+    <div>
+      <p class="eyebrow">THE MACHINE WITHIN</p>
+      <h1>Operating System</h1>
+      <p>Many moving parts. One working system.</p>
+    </div>
+    <div class="view-switch" aria-label="Explorer view">
+      <button type="button" data-view="architecture" aria-pressed="true">
+        <Icon name="grid" size={16} />
+        Architecture
+      </button>
+      <button type="button" data-view="topics" aria-pressed="false">
+        <Icon name="list" size={16} />
+        Topics
+      </button>
+    </div>
+  </div>
+  <section
+    id="architecture"
+    class="architecture"
+    aria-label="Operating system architecture"
+  >
+    <div class="user-space">
+      <div class="architecture-label">
+        <span class="status-dot"></span>
+        <strong>User Space</strong>
+        <span>Where your applications live</span>
+      </div>
+      <div class="app-pills">
+        <span>Applications</span>
+        <span>Shell & utilities</span>
+        <span>Libraries & runtimes</span>
+      </div>
+    </div>
+    <div class="diagram-bridge">
+      <span></span>
+      <span>
+        requests ↓ <span class="bridge-up">↑ results</span>
+      </span>
+      <span></span>
+    </div>
+    <a class="syscall-interface" href={url('/os/areas/fundamentals/')}>
+      <Icon name="layers" size={17} />
+      <strong>System Call Interface</strong>
+      <span>A controlled boundary into the kernel</span>
+      <Icon name="arrow" size={17} />
+    </a>
+    <div class="diagram-bridge compact">
+      <span></span>
+      <span>↓</span>
+      <span></span>
+    </div>
+    <div class="kernel-space">
+      <div class="kernel-heading">
+        <div>
+          <Icon name="chip" size={21} />
+          <h2>Kernel Space</h2>
+        </div>
+        <span>Cooperating subsystems · privileged execution</span>
+      </div>
+      <div class="kernel-grid">
+        {osAreas.map((area) => (
+          <a class="kernel-area" href={url(`/os/areas/${area.id}/`)}>
+            <Icon
+              name={
+                area.id === 'processes'
+                  ? 'chip'
+                  : area.id === 'file-systems'
+                    ? 'file'
+                    : 'grid'
+              }
+              size={19}
+            />
+            <strong>{area.name}</strong>
+            <span>{area.keywords.join(' · ')}</span>
+            <span class="area-arrow">
+              <Icon name="arrow" size={16} />
+            </span>
+          </a>
+        ))}
+      </div>
+      <p class="kernel-note">
+        Shared responsibilities, interconnected by design. These are subjects to
+        explore, not a sequence of layers.
+      </p>
+    </div>
+    <div class="diagram-bridge compact">
+      <span></span>
+      <span>
+        device access ↓ <span class="bridge-up">↑ interrupts</span>
+      </span>
+      <span></span>
+    </div>
+    <div class="hardware-space">
+      <div class="architecture-label">
+        <Icon name="chip" size={20} />
+        <strong>Hardware</strong>
+      </div>
+      <div class="hardware-items">
+        <span>CPU</span>
+        <span>Memory</span>
+        <span>Storage</span>
+        <span>Devices</span>
+      </div>
+    </div>
+  </section>
+  <section
+    id="topics"
+    class="topic-list"
+    hidden
+    aria-label="Operating system topic list"
+  >
+    {osAreas.map((area, i) => (
+      <a href={url(`/os/areas/${area.id}/`)}>
+        <span class="topic-list-index">{String(i + 1).padStart(2, '0')}</span>
+        <div>
+          <h2>{area.name}</h2>
+          <p>{area.description}</p>
+        </div>
+        <Icon name="arrow" size={20} />
+      </a>
+    ))}
+  </section>
+  <div class="explorer-bottom">
+    <span>
+      <span class="status-dot"></span>Start anywhere. Follow the connections.
+    </span>
+    <a class="text-link" href={url('/os/topics/processes/')}>
+      Read about processes <Icon name="arrow" size={16} />
+    </a>
+  </div>
+</Layout>
+<script>
+  document
+    .querySelectorAll<HTMLButtonElement>('[data-view]')
+    .forEach((button) => {
+      button.addEventListener('click', () => {
+        document
+          .querySelectorAll<HTMLButtonElement>('[data-view]')
+          .forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+        for (const id of ['architecture', 'topics'])
+          document.getElementById(id)!.hidden = id !== button.dataset.view;
+        const u = new URL(location.href);
+        u.searchParams.set('view', button.dataset.view!);
+        history.replaceState(null, '', u);
+      });
+    });
+  if (new URLSearchParams(location.search).get('view') === 'topics')
+    document.querySelector<HTMLButtonElement>('[data-view="topics"]')?.click();
+</script>

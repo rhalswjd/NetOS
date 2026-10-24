@@ -1,0 +1,72 @@
+---
+import Icon from './Icon.astro';
+import Search from './Search.astro';
+import { url } from '../lib/routes';
+const path = Astro.url.pathname;
+const active = (part: string) => path.includes(part);
+---
+
+<div class="site-header">
+  <a class="brand" href={url('/')} aria-label="NetOS home">
+    <span class="brand-mark">
+      <Icon name="layers" size={22} />
+    </span>
+    <span>
+      NetOS<span class="brand-divider">/</span>
+      <span class="brand-caption">Knowledge Archive</span>
+    </span>
+  </a>
+  <nav class="main-nav" aria-label="Main navigation">
+    <a href={url('/')} aria-current={path === url('/') ? 'page' : undefined}>
+      Overview
+    </a>
+    <a
+      href={url('/network/')}
+      aria-current={active('/network') ? 'page' : undefined}
+    >
+      Network
+    </a>
+    <a href={url('/os/')} aria-current={active('/os/') ? 'page' : undefined}>
+      OS
+    </a>
+    <a
+      href={url('/archive/concepts/')}
+      aria-current={active('/archive') ? 'page' : undefined}
+    >
+      Archive
+    </a>
+  </nav>
+  <div class="header-actions">
+    <Search />
+    <button
+      type="button"
+      class="icon-button theme-toggle"
+      aria-label="Switch color theme"
+      title="Switch color theme"
+    >
+      <Icon name="sun" size={19} />
+    </button>
+  </div>
+</div>
+<script>
+  const button = document.querySelector<HTMLButtonElement>('.theme-toggle');
+  function updateLabel() {
+    button?.setAttribute(
+      'aria-label',
+      `Switch to ${document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'} mode`,
+    );
+  }
+  updateLabel();
+  button?.addEventListener('click', () => {
+    const theme =
+      document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = theme;
+    try {
+      localStorage.setItem('starlight-theme', theme);
+    } catch {
+      /* Theme still works without storage. */
+    }
+    updateLabel();
+    document.dispatchEvent(new CustomEvent('netos:theme'));
+  });
+</script>

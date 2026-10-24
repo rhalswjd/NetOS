@@ -1,0 +1,242 @@
+/* Starlight keeps its reader layout, TOC and code controls; product tokens are shared. */
+:root {
+  --sl-color-accent-low: #e9f0f5;
+  --sl-color-accent: #507896;
+  --sl-color-accent-high: #365b77;
+  --sl-color-bg: var(--bg);
+  --sl-color-bg-nav: var(--header-bg);
+  --sl-color-bg-sidebar: var(--bg);
+  --sl-color-hairline: var(--line);
+  --sl-content-width: 47rem;
+  --sl-text-h1: 2.4rem;
+  --sl-nav-height: 4.875rem;
+}
+:root[data-theme='dark'] {
+  --sl-color-accent-low: #283a48;
+  --sl-color-accent: #9dbed7;
+  --sl-color-accent-high: #c7dcea;
+}
+header.header {
+  padding: 0 !important;
+  background: var(--header-bg) !important;
+  border-bottom: 1px solid var(--line) !important;
+  backdrop-filter: blur(22px);
+}
+header .site-header {
+  max-width: none;
+}
+.sl-markdown-content {
+  font-size: 15px;
+  line-height: 1.95;
+  color: var(--text);
+}
+.sl-markdown-content h2 {
+  font-size: 1.4rem;
+  margin-top: 2.2em;
+}
+.sl-markdown-content h3 {
+  font-size: 1.1rem;
+}
+.sl-markdown-content a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.sl-markdown-content table {
+  font-size: 13px;
+  width: 100%;
+}
+.sl-markdown-content details {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px 20px;
+  background: var(--surface);
+}
+.sl-markdown-content summary {
+  font-size: 14px;
+  font-weight: 550;
+  color: var(--accent);
+  cursor: pointer;
+}
+.sl-markdown-content details[open] summary {
+  margin-bottom: 22px;
+}
+.doc-breadcrumbs {
+  padding: 0 0 25px;
+}
+.doc-title-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 10px;
+  margin-bottom: 18px;
+}
+.doc-description {
+  color: var(--muted);
+  font-size: 15px;
+  margin-top: 18px;
+  line-height: 1.8;
+}
+.doc-related {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+}
+.doc-related > h2 {
+  font-size: 22px;
+  margin: 12px 0 25px;
+}
+.doc-related .content-group {
+  margin-bottom: 25px;
+}
+.doc-related .section-heading h2 {
+  font-size: 15px;
+}
+.doc-related .document-card h3 {
+  font-size: 14px;
+}
+.doc-related .document-card p {
+  font-size: 11px;
+}
+.doc-related .document-card {
+  padding: 18px;
+}
+.doc-related .document-card-meta {
+  font-size: 8px;
+}
+pre.mermaid {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 20px;
+  border-radius: 12px;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+pre.mermaid svg {
+  height: auto;
+  max-width: 100%;
+}
+@media (max-width: 540px) {
+  :root {
+    --sl-nav-height: 6.125rem;
+    --sl-text-h1: 1.9rem;
+  }
+  .sl-markdown-content {
+    font-size: 14px;
+  }
+  .doc-title-meta {
+    font-size: 9px;
+  }
+  .doc-description {
+    font-size: 13px;
+  }
+  header .site-header {
+    padding-right: 54px;
+  }
+  header .brand-caption,
+  header .brand-divider {
+    display: none;
+  }
+}
+
+.source-attribution {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 16px;
+}
+
+/* Reader navigation uses the same system typography as the article and cards. */
+.pagination-links {
+  font-family: var(--sl-font);
+  gap: 1rem;
+}
+.pagination-links a {
+  border-color: var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: none;
+  padding: 20px;
+  gap: 14px;
+}
+.pagination-links a > span {
+  min-width: 0;
+  font: 400 0.75rem/1.5 var(--sl-font);
+  color: var(--muted);
+}
+.pagination-links .link-title {
+  display: block;
+  margin-top: 0.4rem;
+  font: 550 1rem/1.6 var(--sl-font);
+  letter-spacing: -0.015em;
+  color: var(--text);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.pagination-links a:hover {
+  border-color: var(--accent);
+}
+.doc-related .section-heading {
+  margin-block: 0 1.1rem;
+}
+.doc-related .section-heading h2 {
+  margin: 0;
+}
+.doc-related .content-group + .content-group {
+  margin-top: 2rem;
+}
+.doc-related + footer .meta:empty {
+  display: none;
+}
+
+/* Match wrapper/heading sizes so the permalink gap is measured consistently. */
+.sl-markdown-content .sl-heading-wrapper {
+  --sl-anchor-icon-gap: 0.6em;
+  --sl-anchor-icon-size: 0.75em;
+}
+.sl-markdown-content .sl-heading-wrapper.level-h2 {
+  font-size: 1.4rem;
+}
+.sl-markdown-content .sl-heading-wrapper.level-h3 {
+  font-size: 1.1rem;
+}
+
+/* Starlight maintains aria-current as the reader scrolls. Only glyphs grow,
+   preserving the position of all the other links in the table of contents. */
+:is(starlight-toc, mobile-starlight-toc) nav a {
+  padding-block: 0.375rem;
+  padding-inline-end: 1.4rem;
+}
+:is(starlight-toc, mobile-starlight-toc) nav a > span {
+  display: inline-block;
+  transform-origin: left center;
+  transition:
+    transform 180ms ease-out,
+    color 180ms ease-out;
+}
+:is(starlight-toc, mobile-starlight-toc) nav a[aria-current='true'] > span {
+  transform: scale(1.1);
+  font-weight: 600;
+  color: var(--accent);
+}
+.source-attribution {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+.source-attribution > span {
+  color: var(--subtle);
+}
+.source-attribution > a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(starlight-toc, mobile-starlight-toc) nav a > span {
+    transform: none;
+    transition: none;
+  }
+}

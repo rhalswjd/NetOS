@@ -1,0 +1,57 @@
+---
+import Icon from './Icon.astro';
+import { url } from '../lib/routes';
+import { siteContact } from '../config/contact';
+interface Props {
+  reader?: boolean;
+}
+const { reader = false } = Astro.props;
+const contacts = [
+  {
+    id: 'github',
+    label: 'GitHub',
+    icon: 'github',
+    href: siteContact.githubUrl,
+  },
+  {
+    id: 'email',
+    label: 'Email',
+    icon: 'mail',
+    href: siteContact.email ? `mailto:${siteContact.email}` : '',
+  },
+];
+---
+
+<footer class:list={['site-footer', { 'reader-footer': reader }]}>
+  <a class="footer-brand" href={url('/')}>
+    <Icon name="layers" size={17} /> NetOS{' '}
+    <span>A growing collection of understanding.</span>
+  </a>
+  <div class="footer-end">
+    <nav class="footer-contacts" aria-label="Contact">
+      {contacts.map((contact) =>
+        contact.href ? (
+          <a
+            class="footer-contact"
+            data-contact={contact.id}
+            href={contact.href}
+          >
+            <Icon name={contact.icon} size={16} />
+            {contact.label}
+          </a>
+        ) : (
+          <span
+            class="footer-contact"
+            data-contact={contact.id}
+            aria-disabled="true"
+            title={`${contact.label} 주소 연결 예정`}
+          >
+            <Icon name={contact.icon} size={16} />
+            {contact.label}
+          </span>
+        ),
+      )}
+    </nav>
+    <span class="footer-note">Stay curious. Keep connecting.</span>
+  </div>
+</footer>

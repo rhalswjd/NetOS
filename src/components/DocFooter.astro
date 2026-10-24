@@ -1,0 +1,59 @@
+---
+import Default from '@astrojs/starlight/components/Footer.astro';
+import RelatedContent from './RelatedContent.astro';
+import SiteFooter from './SiteFooter.astro';
+import { getContentIndex } from '../lib/content-index';
+const index = await getContentIndex();
+const current = index.documents.find(
+  (d) => d.id === Astro.locals.starlightRoute.entry.id,
+);
+const related = current ? index.related(current) : [];
+---
+
+<div class="doc-related" data-pagefind-ignore>
+  <p class="eyebrow">CONTINUE CONNECTING</p>
+  <h2>Connected knowledge</h2>
+  <RelatedContent documents={related} showEmpty={false} />
+  {related.length === 0 && (
+    <p class="empty-inline">
+      Connections will appear automatically as related documents are added.
+    </p>
+  )}
+</div>
+<Default />
+<SiteFooter reader />
+<script>
+  const diagrams = Array.from(
+    document.querySelectorAll<HTMLElement>('pre.mermaid'),
+  );
+  const sources = new Map(
+    diagrams.map((node) => [node, node.textContent ?? '']),
+  );
+  let pending = Promise.resolve();
+  function renderDiagrams() {
+    if (!diagrams.length) return;
+    // Serialize theme changes so an in-flight render never races a second render.
+    pending = pending
+      .then(async () => {
+        const { default: mermaid } = await import('mermaid');
+        for (const node of diagrams) {
+          node.removeAttribute('data-processed');
+          node.textContent = sources.get(node)!;
+        }
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'strict',
+          theme:
+            document.documentElement.dataset.theme === 'dark'
+              ? 'dark'
+              : 'neutral',
+        });
+        await mermaid.run({ nodes: diagrams });
+      })
+      .catch(() => {
+        for (const node of diagrams) node.textContent = sources.get(node)!;
+      });
+  }
+  renderDiagrams();
+  document.addEventListener('netos:theme', renderDiagrams);
+</script>

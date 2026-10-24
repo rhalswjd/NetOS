@@ -1,0 +1,56 @@
+---
+import Header from '../components/Header.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { url } from '../lib/routes';
+import '../styles/global.css';
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+const {
+  noindex = false,
+  title = 'A space for understanding',
+  description = 'Explore computer networks and operating systems. A connected archive of concepts, experiments, research, and problems.',
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f7f8fa" />
+    <title>{title} · NetOS</title>
+    {noindex ? (
+      <meta name="robots" content="noindex" />
+    ) : (
+      <link rel="canonical" href={canonical} />
+    )}
+    <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
+    <script is:inline>
+      try {
+        const saved = localStorage.getItem('starlight-theme');
+        document.documentElement.dataset.theme =
+          saved ||
+          (matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light');
+      } catch {}
+    </script>
+  </head>
+  <body class="custom-page">
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+    <header class="header-shell">
+      <Header />
+    </header>
+    <main id="main" class="site-main">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>

@@ -1,0 +1,27 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+!.env.example
+playwright-report/
+test-results/
+.DS_Store
+
+# Local logs, caches and generated reports
+*.log
+logs/
+log/
+build/
+coverage/
+.cache/
+
+# Editor settings and Python tooling
+.idea/
+.vscode/
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.class

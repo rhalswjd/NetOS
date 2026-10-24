@@ -1,0 +1,124 @@
+---
+interface Props {
+  kind: 'network' | 'os';
+}
+const { kind } = Astro.props;
+---
+
+{kind === 'network' ? (
+  <svg
+    class="home-motif network-motif"
+    viewBox="0 0 360 230"
+    fill="none"
+    aria-hidden="true"
+  >
+    <defs>
+      <linearGradient
+        id="plane"
+        x1="50"
+        y1="0"
+        x2="290"
+        y2="160"
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop stop-color="#e1ecf4" />
+        <stop offset=".55" stop-color="#b7cedf" />
+        <stop offset="1" stop-color="#87a7c0" />
+      </linearGradient>
+      <linearGradient id="edge" x1="70" y1="0" x2="290" y2="0">
+        <stop stop-color="#8dabc2" />
+        <stop offset="1" stop-color="#b5cadb" />
+      </linearGradient>
+      <filter id="motif-shadow" x="-40%" y="-40%" width="180%" height="200%">
+        <feDropShadow
+          dx="0"
+          dy="9"
+          stdDeviation="7"
+          flood-color="#476c8b"
+          flood-opacity=".14"
+        />
+      </filter>
+    </defs>
+    <g filter="url(#motif-shadow)">
+      {[5, 4, 3, 2, 1, 0].map((i) => (
+        <g transform={`translate(0 ${i * 17})`}>
+          <path d="m180 23 106 46v8L180 124 74 77v-8Z" fill="url(#edge)" />
+          <path
+            d="m180 18 106 47c4 2 4 6 0 8l-100 45c-4 2-8 2-12 0L74 73c-4-2-4-6 0-8l100-47c2-1 4-1 6 0Z"
+            fill="url(#plane)"
+            stroke="#edf5fa"
+            stroke-opacity=".8"
+          />
+          <path
+            d="m100 68 77 34c2 1 4 1 6 0l77-34"
+            stroke="white"
+            stroke-opacity=".48"
+          />
+        </g>
+      ))}
+    </g>
+  </svg>
+) : (
+  <svg
+    class="home-motif os-motif"
+    viewBox="0 0 360 230"
+    fill="none"
+    aria-hidden="true"
+  >
+    <defs>
+      <linearGradient id="chip-base" x1="80" y1="30" x2="280" y2="190">
+        <stop stop-color="#e9eaed" />
+        <stop offset="1" stop-color="#b0b4bd" />
+      </linearGradient>
+      <linearGradient id="chip-face" x1="100" y1="40" x2="250" y2="160">
+        <stop stop-color="#f9f9fb" />
+        <stop offset="1" stop-color="#d2d5dc" />
+      </linearGradient>
+      <filter id="chip-shadow" x="-50%" y="-50%" width="200%" height="220%">
+        <feDropShadow
+          dx="0"
+          dy="12"
+          stdDeviation="10"
+          flood-color="#4b5366"
+          flood-opacity=".18"
+        />
+      </filter>
+    </defs>
+    <g filter="url(#chip-shadow)">
+      <g stroke="#a8afbc" stroke-width="5" stroke-linecap="round">
+        {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+          <>
+            <path d={`m${91 + i * 13} ${75 - i * 5.6} -13 -7`} />
+            <path d={`m${177 + i * 13} ${155 - i * 5.6} 14 7`} />
+            <path d={`m${92 + i * 13} ${92 + i * 5.6} -14 7`} />
+            <path d={`m${195 + i * 13} ${48 + i * 5.6} 14-7`} />
+          </>
+        ))}
+      </g>
+      <path
+        d="m180 30 108 48v34L180 162 72 112V78Z"
+        fill="url(#chip-base)"
+        stroke="#b4bac4"
+      />
+      <path
+        d="m180 21 108 49c5 2 5 7 0 9l-101 46c-4 2-10 2-14 0L72 79c-5-2-5-7 0-9l101-46c2-2 5-3 7-3Z"
+        fill="url(#chip-face)"
+        stroke="#f9fafc"
+      />
+      <path
+        d="m180 47 64 29-64 29-64-29Z"
+        fill="#9aa5b7"
+        fill-opacity=".18"
+        stroke="white"
+      />
+      <path d="m180 57 43 19-43 19-43-19Z" fill="#f1f2f6" stroke="#b6bfcc" />
+      <path d="m180 64 25 12-25 12-25-12Z" fill="#8695ad" />
+    </g>
+    <g stroke="#b3bdcb" stroke-width="1" opacity=".55">
+      <path d="m72 112-27 13v21l43 20m200-54 27 13v21l-43 20M180 162v32" />
+      <circle cx="88" cy="166" r="3" />
+      <circle cx="272" cy="166" r="3" />
+      <circle cx="180" cy="198" r="3" />
+    </g>
+  </svg>
+)}

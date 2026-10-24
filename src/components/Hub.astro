@@ -1,0 +1,71 @@
+---
+import Layout from '../layouts/Layout.astro';
+import RelatedContent from './RelatedContent.astro';
+import Icon from './Icon.astro';
+import { getContentIndex } from '../lib/content-index';
+import { taxonomy, categoryPath, type Domain } from '../lib/taxonomy';
+import { url } from '../lib/routes';
+interface Props {
+  domain: Domain;
+  id: string;
+}
+const { domain, id } = Astro.props;
+const category = taxonomy[domain].find((c) => c.id === id)!;
+const index = await getContentIndex();
+const documents = index.inCategory(domain, id);
+const label = domain === 'network' ? 'Network' : 'Operating System';
+---
+
+<Layout
+  title={`${category.name} · ${label}`}
+  description={category.description}
+>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href={url('/')}>Overview</a>
+    <Icon name="chevron" size={12} />
+    <a href={url(`/${domain}/`)}>{label}</a>
+    <Icon name="chevron" size={12} />
+    <span>{category.name}</span>
+  </nav>
+  <div class="hub-layout">
+    <aside class="hub-sidebar">
+      <a class="back-to-explorer" href={url(`/${domain}/`)}>
+        <Icon name={domain === 'network' ? 'layers' : 'chip'} size={19} />
+        {label} explorer
+      </a>
+      <p class="eyebrow">
+        {domain === 'network' ? 'OSI LAYERS' : 'KERNEL TOPICS'}
+      </p>
+      <nav aria-label={`${label} categories`}>
+        {taxonomy[domain].map((c) => (
+          <a
+            href={url(categoryPath(domain, c.id))}
+            aria-current={c.id === id ? 'page' : undefined}
+          >
+            {domain === 'network' && (
+              <span class="sidebar-layer">{c.id.toUpperCase()}</span>
+            )}
+            {c.name}
+          </a>
+        ))}
+      </nav>
+    </aside>
+    <div class="hub-content">
+      <div class="hub-heading">
+        <span class="topic-badge">
+          {domain === 'network'
+            ? `${id.toUpperCase()} · OSI MODEL`
+            : 'KERNEL SPACE'}
+        </span>
+        <h1>{category.name}</h1>
+        <p>{category.description}</p>
+        <div class="keyword-list">
+          {category.keywords.map((k) => (
+            <span>{k}</span>
+          ))}
+        </div>
+      </div>
+      <RelatedContent documents={documents} />
+    </div>
+  </div>
+</Layout>

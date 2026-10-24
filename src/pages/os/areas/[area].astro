@@ -1,0 +1,10 @@
+---
+import Hub from '../../../components/Hub.astro';
+import { osAreas } from '../../../lib/taxonomy';
+export function getStaticPaths() {
+  return osAreas.map((a) => ({ params: { area: a.id } }));
+}
+const { area } = Astro.params;
+---
+
+<Hub domain="os" id={area!} />
